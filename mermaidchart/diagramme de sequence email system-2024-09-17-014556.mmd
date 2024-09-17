@@ -1,0 +1,44 @@
+sequenceDiagram
+    actor User
+    participant Client
+    participant MessageController
+    participant MessageService
+    participant ConversationService
+    participant EncryptionService
+    participant FileService
+    participant NotificationService
+    participant Database
+    participant FileStorage
+
+    User->>Client: Compose message
+    Client->>MessageController: POST /api/messages
+    MessageController->>MessageService: sendMessage(MessageDTO)
+    MessageService->>ConversationService: getConversation(conversationId)
+    ConversationService->>Database: findConversationById(conversationId)
+    Database-->>ConversationService: Conversation
+    ConversationService-->>MessageService: Conversation
+    
+    alt Has Attachment
+        MessageService->>FileService: storeFile(attachment)
+        FileService->>FileStorage: save(file)
+        FileStorage-->>FileService: fileUrl
+        FileService-->>MessageService: fileUrl
+    end
+
+    MessageService->>EncryptionService: encryptMessage(content)
+    EncryptionService-->>MessageService: encryptedContent
+    
+    MessageService->>Database: saveMessage(Message)
+    Database-->>MessageService: savedMessage
+    
+    MessageService->>NotificationService: notifyParticipants(conversationId, messageId)
+    NotificationService->>Database: saveNotifications(notifications)
+    
+    MessageService-->>MessageController: MessageResponse
+    MessageController-->>Client: 201 Created (MessageResponse)
+    Client-->>User: Message sent confirmation
+
+    loop For each participant
+        NotificationService->>Client: Send real-time notification
+        Client-->>User: Display new message notification
+    end
