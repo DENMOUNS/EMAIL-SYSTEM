@@ -1,0 +1,73 @@
+classDiagram
+    class UserController {
+        +createUser(UserDTO)
+        +getUser(String)
+        +updateUser(String, UserDTO)
+        +addContact(String, ContactDTO)
+        +searchUsers(String)
+    }
+    class ConversationController {
+        +createConversation(ConversationDTO)
+        +getConversation(String)
+        +addParticipant(String, String)
+        +searchConversations(String)
+    }
+    class MessageController {
+        +sendMessage(MessageDTO)
+        +replyToMessage(String, MessageDTO)
+        +getMessage(String)
+        +searchMessages(String, SearchCriteria)
+        +attachFile(String, MultipartFile)
+    }
+    class NotificationController {
+        +getNotifications(String)
+        +markAsRead(String)
+    }
+    class UserService {
+        +createUser(User)
+        +getUser(String)
+        +updateUser(User)
+        +addContact(String, Contact)
+        +searchUsers(String)
+    }
+    class ConversationService {
+        +createConversation(Conversation)
+        +getConversation(String)
+        +addParticipant(String, User)
+        +searchConversations(String)
+    }
+    class MessageService {
+        +sendMessage(Message)
+        +replyToMessage(String, Message)
+        +getMessage(String)
+        +searchMessages(String, SearchCriteria)
+        +attachFile(String, File)
+    }
+    class NotificationService {
+        +createNotification(Notification)
+        +getNotifications(String)
+        +markAsRead(String)
+    }
+    class SearchService {
+        +searchUsers(String)
+        +searchConversations(String)
+        +searchMessages(String, SearchCriteria)
+    }
+    class EncryptionService {
+        +encryptMessage(String)
+        +decryptMessage(String)
+    }
+    class FileService {
+        +storeFile(MultipartFile)
+        +getFile(String)
+    }
+
+    UserController --> UserService
+    ConversationController --> ConversationService
+    MessageController --> MessageService
+    NotificationController --> NotificationService
+    UserService --> SearchService
+    ConversationService --> SearchService
+    MessageService --> SearchService
+    MessageService --> EncryptionService
+    MessageService --> FileService

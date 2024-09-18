@@ -1,0 +1,25 @@
+graph TD
+    A[Client] -->|HTTP/WebSocket| B(API Layer)
+    B --> C{Service Layer}
+    C --> D[UserService]
+    C --> E[ConversationService]
+    C --> F[MessageService]
+    C --> G[NotificationService]
+    C --> H[SearchService]
+    C --> I[EncryptionService]
+    C --> J[FileService]
+    D & E & F & G --> K[(Database)]
+    H --> L[(Embedded Elasticsearch)]
+    J --> M[(File Storage)]
+    
+    subgraph "Application Monolithique"
+    B
+    C
+    D
+    E
+    F
+    G
+    H
+    I
+    J
+    end
